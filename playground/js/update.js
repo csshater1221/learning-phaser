@@ -1,22 +1,31 @@
-const jumpSpeed = 200;
-const runSpeed = 300;
-const jumpsAllowed = 3;
-var jumpsLeft = 0;
-var isMidJump;
-
-/*global player*/
-/*global debugText*/
-function update(){
-    const cursors = this.input.keyboard.createCursorKeys();
+function PrintState() {
+    const state = Globals.game.state;
     const debug = [];
+    for (var property in state) {
+        if (state.hasOwnProperty(property)) {
+            debug.push(property + ": " + state[property]);
+        }
+    }
+    
+    Globals.game.debugText.setText(debug);
+}
+
+function update(){
+    /*global Globals*/
+    const game = Globals.game;
+    const cursors = game.cursors;
+    const player = game.player;
+    const constant = game.constants;
+    const state = game.state;
+    
     if (cursors.left.isDown)
     {
-        player.setVelocityX(-runSpeed);
+        player.setVelocityX(-constant.runSpeed);
         player.anims.play('left', true);
     }
     else if (cursors.right.isDown)
     {
-        player.setVelocityX(runSpeed);
+        player.setVelocityX(constant.runSpeed);
         player.anims.play('right', true);
     }
     else
@@ -26,22 +35,21 @@ function update(){
     }
     
     if(player.body.touching.down){
-        jumpsLeft = jumpsAllowed;
+        state.jumpsLeft = constant.jumpsAllowed;
     }
     
-    if (cursors.up.isDown && !isMidJump && jumpsLeft > 0)
+    if (cursors.up.isDown && !state.isMidJump && state.jumpsLeft > 0)
     {
-        jumpsLeft--;
-        player.setVelocityY(-jumpSpeed);
-        isMidJump = true;
+        state.jumpsLeft--;
+        player.setVelocityY(-constant.jumpSpeed);
+        state.isMidJump = true;
     }
     
     if (cursors.up.isUp)
     {
-        isMidJump = false;
+        state.isMidJump = false;
     }
     
-    debug.push('JumpsLeft: ' + jumpsLeft);
-    debug.push('isMidJump: ' + isMidJump);
-    debugText.setText(debug);
+    // For debugging only
+    PrintState();
 }

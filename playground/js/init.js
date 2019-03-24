@@ -1,7 +1,12 @@
+/*global Globals*/
+/*global Phaser*/
+/*global preload*/
+/*global create*/
+/*global update*/
 var config = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 600,
+    width: Globals.config.width,
+    height: Globals.config.height,
     scene: {
         preload: preload,
         create: create,
@@ -11,7 +16,7 @@ var config = {
         default: 'arcade',
         arcade: {
             gravity: { y: 300 },
-            debug: true
+            debug: Globals.config.debugPhysics
         }
     }
 };

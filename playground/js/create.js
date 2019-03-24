@@ -1,6 +1,3 @@
-var player;
-var cursors;
-var debugText;
 function createPlatforms(add){
     const platforms = add.staticGroup();
     platforms.create(600, 400, 'ground');
@@ -17,6 +14,8 @@ function createPlayer(add) {
     return player;
 }
 
+// add and generateFrames have to be bound to AnimationManager
+// took me 3 hours to debug why it was crashing
 function createAnimations(add, generateFrames) {
     add({
         key: 'left',
@@ -54,14 +53,20 @@ function create(){
     const platforms = createPlatforms(physicsEngine.add);
     
     // Player
-    player = createPlayer(physicsEngine.add);
+    const player = createPlayer(physicsEngine.add);
     
     // Create animations
     createAnimations(newAnimation, generateFrames);
     
-    cursors = this.input.keyboard.createCursorKeys();
+    const cursors = this.input.keyboard.createCursorKeys();
     
     this.physics.add.collider(player, platforms);
     
-    debugText = this.add.text(10, 30, '', { font: '16px Courier', fill: '#ffffff' });
+    const debugText = this.add.text(10, 30, '', { font: '16px Courier', fill: '#ffffff' });
+    
+    /*global Globals*/
+    const game = Globals.game;
+    game.player = player;
+    game.cursors = cursors;
+    game.debugText = debugText;
 }
